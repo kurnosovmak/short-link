@@ -1,7 +1,7 @@
 is_debug: true
 listen:
   bind_ip: 127.0.0.1
-  port: 80
+  port: 8080
 redis:
   addr: localhost:6379
   password: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81

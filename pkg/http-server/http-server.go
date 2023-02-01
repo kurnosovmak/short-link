@@ -4,12 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type httpServer struct {
+type HttpServer struct {
 	*gin.Engine
 }
 
-func New() *httpServer {
-	server := httpServer{
+func New() *HttpServer {
+	server := HttpServer{
 		gin.Default(),
 	}
 	return &server

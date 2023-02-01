@@ -1,11 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"context"
+	"github.com/kurnosovmak/short-link/internal/handlers/links"
 	"github.com/kurnosovmak/short-link/internal/pkg/config"
+	"github.com/kurnosovmak/short-link/internal/services/link_service"
+	"github.com/kurnosovmak/short-link/pkg/cachemap"
 	httpserver "github.com/kurnosovmak/short-link/pkg/http-server"
 	"github.com/kurnosovmak/short-link/pkg/logging"
+	"github.com/kurnosovmak/short-link/pkg/redis"
 )
+
+var ctx = context.Background()
 
 func main() {
 	logging.Init()
@@ -15,15 +21,21 @@ func main() {
 	log.Println("config initializing")
 	cfg := config.Get()
 
-	log.Println("http server initializing")
-	httpServer := httpserver.New()
+	log.Println("redis connect initializing")
+	redis := redis.New(cfg.Redis.Addr, cfg.Redis.Password, cfg.Redis.DB)
 
-	httpServer.GET("/api/heals", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	log.Println("cahce initializing")
+	cacheLink := cachemap.New(log)
+
+	log.Println("http server initializing")
+	server := httpserver.New()
+
+	log.Println("create and register handlers")
+	linkService := link_service.NewService(redis, cacheLink, log)
+	linkHandler := links.NewHandler(linkService, log)
+	linkHandler.Register(server)
+
 	log.Println("start server")
-	httpServer.Run(cfg.GetFullAddress())
+	server.Run(cfg.GetFullAddress())
 
 }
