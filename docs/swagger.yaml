@@ -1,0 +1,13 @@
+basePath: /api/
+host: localhost:8080
+info:
+  contact:
+    email: kurnosovmak@gmail.com
+    name: Kurnosovmak
+  description: This is a sample service shorter link.
+  license:
+    name: MIT
+  title: Shorter link backend
+  version: "1.0"
+paths: {}
+swagger: "2.0"

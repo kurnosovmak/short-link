@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "github.com/kurnosovmak/short-link/docs"
 	"github.com/kurnosovmak/short-link/internal/handlers/links"
 	"github.com/kurnosovmak/short-link/internal/pkg/config"
 	"github.com/kurnosovmak/short-link/internal/services/link_service"
