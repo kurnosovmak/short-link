@@ -9,9 +9,23 @@ import (
 	httpserver "github.com/kurnosovmak/short-link/pkg/http-server"
 	"github.com/kurnosovmak/short-link/pkg/logging"
 	"github.com/kurnosovmak/short-link/pkg/redis"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var ctx = context.Background()
+
+// @title           Shorter link backend
+// @version         1.0
+// @description     This is a sample service shorter link.
+
+// @contact.name   Kurnosovmak
+// @contact.email  kurnosovmak@gmail.com
+
+// @license.name  MIT
+
+// @host      localhost:8080
+// @BasePath  /api/
 
 func main() {
 	logging.Init()
@@ -34,6 +48,10 @@ func main() {
 	linkService := link_service.NewService(redis, cacheLink, log)
 	linkHandler := links.NewHandler(linkService, log)
 	linkHandler.Register(server)
+
+	if *cfg.IsDebug {
+		server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	log.Println("start server")
 	server.Run(cfg.GetFullAddress())
